@@ -1,8 +1,20 @@
 package projeto.pkgfinal;
 
-// @author Isabela Canelas Ett - RA00303107
+/*
+    @author
+        Gabriel de Moraes Monteiro Zaninotti - RA00227270
+        Isabela Canelas Ett - RA00303107
+        João Paulo Seryung Kang - RA00231729
+        Livia Rodrigues Gonsales - RA00222585
+*/
 
 import java.io.IOException;
+import static java.lang.Runtime.getRuntime;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -29,6 +41,7 @@ public class Menu {
                     this.createTasks();
                     this.runTasks();
                     continue;
+
                 case 2: 
                     ce.stopCycle();
                     this.showMenu();
@@ -80,6 +93,15 @@ public class Menu {
         new Thread(new VariableRunnable()).start();
     }
     
+    public void runBoiler () {
+        try { Runtime.getRuntime().exec(" java -jar str-caldeira-v2.1.jar");
+        } catch(IOException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        this.showMenu();
+    }
+    
     private class VariableRunnable implements Runnable {
         public void run() {
             ce.run();
@@ -94,12 +116,35 @@ public class Menu {
         @Override
         public void run() {
             super.setStartTime();
-       
-            System.out.println(this.name);
+   
+            DatagramSocket clientSocket = null;
+            try { clientSocket = new DatagramSocket();
+            } catch(SocketException ex) { Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex); }
             
-            try { Runtime.getRuntime().exec(" java -jar str-caldeira.jar ");
+            InetAddress IPAddress = null;
+            try { IPAddress = InetAddress.getByName("localhost");
+            } catch(UnknownHostException ex) { Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex); }
+
+            byte[] sendData = new byte[1024];
+            byte[] receiveData = new byte[1024];
+
+            String sentence = "st-0";
+            sendData = sentence.getBytes();
+            
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 4545);
+            try { clientSocket.send(sendPacket);
             } catch(IOException ex) { Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex); }
 
+            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+            try { clientSocket.receive(receivePacket);
+            } catch (IOException ex) { Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex); }
+            String modifiedSentence = new String(receivePacket.getData());
+            
+            String value = modifiedSentence.split("-")[1];
+            System.out.println("Temperature: " + value);
+
+            clientSocket.close();
+            
             super.setFinishTime();
             super.setDuration();
         }
