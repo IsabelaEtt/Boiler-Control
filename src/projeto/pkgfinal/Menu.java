@@ -2,9 +2,12 @@ package projeto.pkgfinal;
 
 // @author Isabela Canelas Ett - RA00303107
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Menu {
     boolean runningMenu = true;
@@ -15,7 +18,7 @@ public class Menu {
         System.out.println("Bem vindo! Selecione o que deseja fazer com o executivo cíclico de tempo variável:");
         System.out.println("1 - Rodar");
         System.out.println("2 - Pausar");
-        System.out.println("3 - Reotmar");
+        System.out.println("3 - Retomar");
         System.out.println("4 - Parar");
         System.out.println("5 - Sair");
         
@@ -93,6 +96,9 @@ public class Menu {
             super.setStartTime();
        
             System.out.println(this.name);
+            
+            try { Runtime.getRuntime().exec(" java -jar str-caldeira.jar ");
+            } catch(IOException ex) { Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex); }
 
             super.setFinishTime();
             super.setDuration();

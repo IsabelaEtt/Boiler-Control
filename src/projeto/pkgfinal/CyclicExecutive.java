@@ -4,6 +4,8 @@ package projeto.pkgfinal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CyclicExecutive {
     private final long minorCycleTime = 30;
@@ -44,9 +46,7 @@ public class CyclicExecutive {
         System.out.println("Will wait " + timeToWait + " ms...");
         
         try { new Thread().sleep(timeToWait);
-        } catch(InterruptedException e) {
-            System.out.println("Something went wrong while waiting next minor cycle..." + e);
-        }
+        } catch(InterruptedException ex) { Logger.getLogger(CyclicExecutive.class.getName()).log(Level.SEVERE, null, ex);}
     }
     
     public void addMinorCycle (List<Task> newMinorCycle) {
