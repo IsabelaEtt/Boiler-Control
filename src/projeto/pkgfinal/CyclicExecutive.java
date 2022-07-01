@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CyclicExecutive {
-    private final long minorCycleTime = 30;
+    private final long minorCycleTime = 3000;
     private long timeUsedInMinorCycle = 0;
     private List<List<Task>> minorCycles = new ArrayList<>();
     private boolean running = true;
